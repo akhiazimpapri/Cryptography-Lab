@@ -6,20 +6,20 @@ g = 3
 print(f"Prime number : {p}")
 print(f"Primitive root : {g}")
 
-xa = random.randint(2, p-2)
-xb = random.randint(2, p-2)
+a = random.randint(2, p-2)
+b = random.randint(2, p-2)
 
-print(f"Alice's private key : {xa}")
-print(f"Bob's private key : {xb}")
+print(f"Alice's private key : {a}")
+print(f"Bob's private key : {b}")
 
-ya = pow(g, xa, p)
-yb = pow(g, xb, p)
+A = pow(g, a, p)
+B = pow(g, b, p)
 
-print(f"Alice's public key : {ya}")
-print(f"Bob's public key : {yb}")
+print(f"Alice's public key : {A}")
+print(f"Bob's public key : {B}")
 
-sectet_a = pow(yb, xa, p)
-sectet_b = pow(ya, xb, p)
+sectet_a = pow(B, a, p)
+sectet_b = pow(A, b, p)
 
 print(f"Alice's sectet key : {sectet_a}")
 print(f"Bob's sectet key : {sectet_b}")
