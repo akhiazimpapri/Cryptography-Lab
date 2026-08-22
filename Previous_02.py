@@ -1,75 +1,52 @@
-# Split the message into small blocks
+# RSA Previous
 def split_into_blocks(message, block_size):
-    blocks = []
+  blocks = []
 
-    for i in range(0, len(message), block_size):
-        block = message[i:i + block_size]
-        blocks.append(block)
+  for i in range(0, len(message), block_size):
+    block = message[i : i + block_size]
+    blocks.append(block)
 
-    return blocks
+  return blocks  
 
-
-# Encrypt each block using RSA
 def rsa_encrypt(blocks, e, n):
-    encrypted = []
+  cipher = []
+  for block in blocks:
+    c = pow(int(block), e, n)
+    cipher.append(c)
 
-    for block in blocks:
-        cipher = pow(int(block), e, n)
-        encrypted.append(cipher)
+  return cipher
 
-    return encrypted
+def rsa_decrypt(ciphers, d, n):
+  plain = []
+  for cipher in ciphers:
+    m = pow(cipher, d, n)
+    plain.append(m)
 
+  return plain      
 
-# Decrypt each block using RSA
-def rsa_decrypt(cipher_blocks, d, n):
-    decrypted = []
+def block_to_string(blocks, pad_size):
+  result = ""
+  for i in range(len(blocks)):
+    block = str(blocks[i])
+    if pad_size and i < len(blocks)-1:
+      block = block.zfill(pad_size)
+    result += block
+  return result      
 
-    for cipher in cipher_blocks:
-        plain = pow(cipher, d, n)
-        decrypted.append(plain)
+text = "6882326879666683" 
+e = 79
+d = 1019
+n = 3337 
+block_plain = split_into_blocks(text, 3)
+block_cipher = rsa_encrypt(block_plain, e, n)
+cipher = block_to_string(block_cipher, pad_size=None)
 
-    return decrypted
-
-
-# Convert blocks back into one string
-def blocks_to_string(blocks, pad_size=None):
-    result = ""
-
-    for i in range(len(blocks)):
-        block = str(blocks[i])
-
-        # Add zeros before the block if necessary
-        if pad_size and i < len(blocks) - 1:
-            block = block.zfill(pad_size)
-
-        result = result + block
-
-    return result
-
-
-if __name__ == "__main__":
-    M = input("Enter the plaintext (numeric) M: ").strip()
-    e = int(input("Enter public exponent e: "))
-    d = int(input("Enter private exponent d: "))
-    n = int(input("Enter modulus n: "))
-
-    block_size = len(str(n)) - 1 
-
-    # Encryption 
-    plain_blocks = split_into_blocks(M, block_size)
-    cipher_blocks = rsa_encrypt(plain_blocks, e, n)
-    ciphertext = "".join(str(c) for c in cipher_blocks)
-
-    # Decryption 
-    decrypted_blocks = rsa_decrypt(cipher_blocks, d, n)
-    decrypted_text = blocks_to_string(decrypted_blocks, pad_size=block_size)
-
-    # Output 
-    print("\n--- RESULTS ---")
-    print(f"Plaintext (M)        : {M}")
-    print(f"Block size used      : {block_size} digits")
-    print(f"Plaintext blocks     : {plain_blocks}")
-    print(f"Encrypted blocks     : {cipher_blocks}")
-    print(f"Ciphertext (C)       : {ciphertext}")
-    print(f"Decrypted blocks     : {decrypted_blocks}")
-    print(f"Decrypted plaintext  : {decrypted_text}")
+decrypt_block = rsa_decrypt(block_cipher, d, n)
+decrypted_msg = block_to_string(decrypt_block, None)
+    
+print("Original Message : ", text)    
+print("Plain cipher : ", block_plain) 
+print("Block cipher : ", block_cipher)   
+print("Cipher Text ; ", cipher)
+print("Decrypted Block : ", decrypt_block)
+print("Decrypted Original Message : ", decrypted_msg)
